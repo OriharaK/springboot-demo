@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.common.Result;
 import com.example.demo.model.WorkWith;
 import com.example.demo.model.WorkWithDetailVO;
 import com.example.demo.service.WorkWithService;
@@ -17,13 +18,13 @@ public class WorkWithController {
     @Autowired
     private WorkWithService workWithService;
 
-    @GetMapping("/getAllWorkWiths")
-    public List<WorkWith> getAllWorkWiths(){
-        return workWithService.getAllWorkWiths();
+    @GetMapping
+    public Result<List<WorkWith>> getAllWorkWiths(){
+        return Result.success(workWithService.getAllWorkWiths());
     }
 
-    @GetMapping("/getWorkWithDetails")
-    public List<WorkWithDetailVO> getWorkWithDetails(){
-        return workWithService.getWorkWithDetails();
+    @GetMapping("/details")
+    public Result<List<WorkWithDetailVO>> getWorkWithDetails(){
+        return Result.success(workWithService.getWorkWithDetails());
     }
 }

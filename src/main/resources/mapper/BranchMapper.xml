@@ -6,4 +6,17 @@
     <select id="getAllBranches" resultType="com.example.demo.model.Branch">
         SELECT * FROM branch
     </select>
+    <insert id="insertBranch">
+        INSERT INTO branch(branch_id, branch_name, manager_id)
+        VALUES (#{branchId}, #{branchName}, #{managerId})
+    </insert>
+    <delete id="deleteBranch">
+        DELETE FROM branch WHERE branch_id = #{branchId}
+    </delete>
+    <update id="updateBranch">
+        UPDATE branch
+        SET branch_name = #{branchName},
+            manager_id = #{managerId}
+        WHERE branch_id = #{branchId}
+    </update>
 </mapper>

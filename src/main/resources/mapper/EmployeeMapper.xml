@@ -3,15 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.EmployeeMapper">
+    <!-- CRUD增删改查 -->
     <select id="getAllEmployees" resultType="com.example.demo.model.Employee">
         SELECT * FROM employee;
     </select>
-    <select id="getByBranchId" resultType="com.example.demo.model.Employee">
-        SELECT * FROM employee WHERE branch_id = #{branchId};
-    </select>
     <insert id="insertEmployee">
         INSERT INTO employee (emp_id, name, birth_date, sex, salary, branch_id, sup_id)
-        VALUES (#{empId}, #{name}, #{birthDate},#{sex},#{salary},#{branchId},#{supId});
+        VALUES (#{empId}, #{name}, #{birthDate}, #{sex}, #{salary}, #{branchId}, #{supId});
     </insert>
     <update id="updateEmployee">
         UPDATE employee
@@ -26,4 +24,16 @@
     <delete id="deleteEmployee">
         DELETE FROM employee WHERE emp_id = #{empId}
     </delete>
+    <!-- 条件查询 -->
+    <select id="getByBranchId" resultType="com.example.demo.model.Employee">
+        SELECT * FROM employee WHERE branch_id = #{branchId};
+    </select>
+    <!-- 查分页数据，pageSize指每页显示几条，offset指偏移量也就是跳过多少条 -->
+    <select id="getEmployeesByPage" resultType="com.example.demo.model.Employee">
+        SELECT * FROM employee LIMIT #{offset}, #{pageSize}
+    </select>
+    <!-- 查总记录数 -->
+    <select id="getTotalCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM employee
+    </select>
 </mapper>

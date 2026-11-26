@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.common.PageResult;
+import com.example.demo.common.Result;
 import com.example.demo.model.Employee;
 import com.example.demo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,55 +18,56 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/getAllEmployees")
-    public List<Employee> getAllEmployees(){
-        return employeeService.getAllEmployees();
+    // 增删改查
+    @GetMapping
+    public Result<List<Employee>> getAllEmployees(){
+        List<Employee> list = employeeService.getAllEmployees();
+        return Result.success(list);
     }
 
-    @GetMapping("/getByBranchId")
-    public Map<String, Object> geyByBranchId(@RequestParam("branchId") Integer branchId){
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("employeeList", employeeService.getByBranchId(branchId));
-        return hashMap;
-    }
-
-    @PostMapping("/insertEmployee")
-    public String insertEmployee(@RequestBody Employee employee){
+    @PostMapping
+    public Result<Void> insertEmployee(@RequestBody Employee employee){
         int row = employeeService.insertEmployee(employee);
         if (row > 0) {
-            return "添加成功！";
+            return Result.success("添加成功！");
         } else {
-            return "添加失败！";
+            return Result.error("添加失败!");
         }
     }
 
-    @PutMapping("/updateEmployee")
-    public Map<String, Object> updateEmployee(@RequestBody Employee employee){
+    @PutMapping
+    public Result<Void> updateEmployee(@RequestBody Employee employee){
         int rows = employeeService.updateEmployee(employee);
-        Map<String, Object> result = new HashMap<>();
         if (rows > 0) {
-            result.put("code", 200);
-            result.put("msg", "修改成功！");
+            return Result.success("修改成功！");
         } else {
-            result.put("code", 500);
-            result.put("msg", "修改失败，可能找不到该员工！");
+            return Result.error("修改失败，可能找不到该员工！");
         }
-        result.put("data", null);
-        return result;
     }
 
-    @DeleteMapping("/deleteEmployee")
-    public Map<String, Object> deleteEmployee(@RequestParam("empId") Integer empId){
+    @DeleteMapping("/{empId}")
+    public Result<Void> deleteEmployee(@PathVariable("empId") Integer empId){
         int rows = employeeService.deleteEmployee(empId);
-        Map<String, Object> result = new HashMap<>();
         if (rows > 0) {
-            result.put("code", 200);
-            result.put("msg", "删除成功！");
+            return Result.success("删除成功！");
         } else {
-            result.put("code", 500);
-            result.put("msg", "删除失败，可能找不到该员工！");
+            return Result.success("删除失败，可能找不到该员工！");
         }
-        result.put("data", null);
-        return result;
+    }
+
+    // 条件查询
+    @GetMapping("/branch/{branchId}")
+    public Result<List<Employee>> geyByBranchId(@PathVariable("branchId") Integer branchId){
+        return Result.success(employeeService.getByBranchId(branchId));
+    }
+
+    // 分页查询员工
+    @GetMapping("/page")
+    public Result<PageResult<Employee>> getPage(
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "2") Integer pageSize
+    ){
+        PageResult<Employee> pageResult = employeeService.getEmployeesByPage(pageNum, pageSize);
+        return Result.success(pageResult); // 装箱，然后直接扔给前端
     }
 }

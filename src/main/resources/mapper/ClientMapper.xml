@@ -6,4 +6,17 @@
     <select id="getAllClients" resultType="com.example.demo.model.Client">
         SELECT * FROM client
     </select>
+    <insert id="insertClient">
+        INSERT INTO client(client_id, client_name, phone)
+        VALUES (#{clientId}, #{clientName}, #{phone})
+    </insert>
+    <delete id="deleteClient">
+        DELETE FROM client WHERE client_id = #{clientId}
+    </delete>
+    <update id="updateClient">
+        UPDATE client
+        SET client_name = #{clientName},
+            phone = #{phone}
+        WHERE client_id = #{clientId}
+    </update>
 </mapper>
